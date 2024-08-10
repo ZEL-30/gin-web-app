@@ -20,7 +20,7 @@ func NewAuthContorller(authService domain.AuthInterface) authContorller {
 
 func (s *authContorller) GetAuth(c *gin.Context) {
 	type authInfo struct {
-		Username string `json:"name"`
+		Username string `json:"username"`
 		Password string `json:"password"`
 	}
 

@@ -16,8 +16,8 @@ func NewUserService(userRepo domain.UserRepository) domain.UserInterface {
 	}
 }
 
-func (s *userService) Register(user rep.User) (*rep.User, error) {
-	data, err := s.userRepo.Register(*assembler.UserAsm.ToData(user))
+func (s *userService) Add(user rep.User) (*rep.User, error) {
+	data, err := s.userRepo.Add(*assembler.UserAsm.ToData(user))
 	if err != nil {
 		return &rep.User{}, err
 	}
@@ -33,13 +33,13 @@ func (s *userService) Get(id string) (*rep.User, error) {
 }
 
 func (s *userService) GetAll() ([]*rep.User, error) {
-	books, err := s.userRepo.GetAll()
+	users, err := s.userRepo.GetAll()
 	if err != nil {
 		return nil, err
 	}
 
 	rtnVal := []*rep.User{}
-	for _, user := range books {
+	for _, user := range users {
 		rtnVal = append(rtnVal, assembler.UserAsm.ToRepresentation(*user))
 	}
 	return rtnVal, nil

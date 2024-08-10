@@ -6,7 +6,7 @@ import (
 )
 
 type UserRepository interface {
-	Register(user entity.User) (*entity.User, error)
+	Add(user entity.User) (*entity.User, error)
 	Get(id string) (*entity.User, error)
 	GetAll() ([]*entity.User, error)
 	Update(user entity.User) (*entity.User, error)
@@ -14,7 +14,7 @@ type UserRepository interface {
 }
 
 type UserInterface interface {
-	Register(user rep.User) (*rep.User, error)
+	Add(user rep.User) (*rep.User, error)
 	Get(id string) (*rep.User, error)
 	GetAll() ([]*rep.User, error)
 	Update(user rep.User) (*rep.User, error)

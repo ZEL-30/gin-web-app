@@ -13,11 +13,11 @@ func Init(router *gin.Engine) {
 
 	// 设置日志记录级别为 Debug
 	logrus.SetLevel(logrus.DebugLevel)
-	// 使用自定义的日志记录中间件，将日志输出到文件
 	router.Use(LoggerToFile(logrus.StandardLogger()))
+
 	// 使用 CORS 跨域中间件
 	router.Use(CORS())
+
 	// 根据配置设置 gin 的运行模式
 	gin.SetMode(infra.AppConfig.RunMode)
-
 }

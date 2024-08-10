@@ -15,7 +15,7 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-func NewDB() *gorm.DB {
+func InitDB() *gorm.DB {
 	var (
 		dbName, user, password, host string
 		port                         int
@@ -54,11 +54,6 @@ func NewDB() *gorm.DB {
 		log.Fatal("failed to open database")
 	}
 
-	return db
-}
-
-func InitDB(db *gorm.DB) {
-
 	// 定义回调函数，在创建记录前生成 UUID
 	var createCallback = func(db *gorm.DB) {
 		idField := db.Statement.Schema.LookUpField("id")
@@ -68,7 +63,7 @@ func InitDB(db *gorm.DB) {
 	}
 
 	// 注册 create 回调函数，在执行 gorm:create 操作之前执行名为 uuid 的回调函数
-	err := db.Callback().Create().Before("gorm:create").Register("uuid", createCallback)
+	err = db.Callback().Create().Before("gorm:create").Register("uuid", createCallback)
 	if err != nil {
 		// 记录日志，如果注册回调出现错误则记录到日志中
 		logger.Fatal("failed to register uuid hook")
@@ -82,10 +77,12 @@ func InitDB(db *gorm.DB) {
 	sqlDB.SetMaxOpenConns(100)
 	// 调用 migrate 函数更新数据库结构
 	migrate(db)
+
+	return db
 }
 
 func migrate(db *gorm.DB) {
-	// 自动迁移数据库模式以匹配 Book 结构体
+	// 自动迁移数据库模式以匹配 User 结构体
 	err := db.AutoMigrate(&entity.User{})
 	if err != nil {
 		// 记录日志，如果迁移过程中出错则记录日志

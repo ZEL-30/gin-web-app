@@ -27,6 +27,14 @@ func NewAuthService(db *gorm.DB) *authService {
 	}
 }
 
+func (s *authService) Register(user rep.User) error {
+	user.Password = s.encodeMD5(user.Password)
+	if err := s.db.Create(&user).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *authService) Auth(username string, password string) error {
 	var user struct {
 		Password string

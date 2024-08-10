@@ -36,22 +36,8 @@ const (
 var DatabaseConfig = &database{
 	DBType:     MySQL,
 	DBUser:     "root",
-	DBPassword: "123456",
-	DBHost:     "127.0.0.1",
+	DBPassword: "!Qw2!Qw2",
+	DBHost:     "124.71.108.242",
 	DBPort:     3306,
-	DBName:     "test_orm",
-}
-
-type ldapConfig struct {
-	Url      string
-	User     string
-	Password string
-	DC       string //domain component
-}
-
-var LDAPConfig = &ldapConfig{
-	Url:      "ldap://127.0.0.1:10389",
-	User:     "uid=admin,ou=system",
-	Password: "secret",
-	DC:       "dc=chuyang,dc=org",
+	DBName:     "example",
 }

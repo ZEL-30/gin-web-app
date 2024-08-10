@@ -30,7 +30,7 @@ func (s *userRepo) encodeMD5(value string) string {
 	return hex.EncodeToString(m.Sum(nil))
 }
 
-func (m *userRepo) Register(user entity.User) (*entity.User, error) {
+func (m *userRepo) Add(user entity.User) (*entity.User, error) {
 	logrus.Debugf("about to save a user %s", user.Name)
 	user.Password = m.encodeMD5(user.Password)
 	if err := m.db.Create(&user).Error; err != nil {

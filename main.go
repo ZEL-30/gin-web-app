@@ -20,7 +20,7 @@ func main() {
 	middleware.Init(r)
 
 	// 初始化数据库
-	db := repository.NewDB()
+	db := repository.InitDB()
 
 	// 注册路由
 	router.Register(r, db)

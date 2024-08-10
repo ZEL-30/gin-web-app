@@ -14,14 +14,14 @@ type userController struct {
 	authService domain.AuthInterface
 }
 
-func NewUserHandler(userService domain.UserInterface, authService domain.AuthInterface) userController {
+func NewUserController(userService domain.UserInterface, authService domain.AuthInterface) userController {
 	return userController{
 		userService,
 		authService,
 	}
 }
 
-func (s *userController) Register(c *gin.Context) {
+func (s *userController) Add(c *gin.Context) {
 	user := &rep.User{}
 	if err := c.ShouldBind(user); err != nil {
 		appErr := &rep.AppError{
@@ -33,10 +33,10 @@ func (s *userController) Register(c *gin.Context) {
 	}
 	logger.Debugf("Received request to add a user %s.", user.Name)
 
-	// token := s.authService.ExtractToken(c)
-	// user.Name, _ = s.authService.GetUserFromToken(token)
+	token := s.authService.ExtractToken(c)
+	user.Name, _ = s.authService.GetUserFromToken(token)
 
-	rtnVal, err := s.userService.Register(*user)
+	rtnVal, err := s.userService.Add(*user)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -57,13 +57,13 @@ func (s *userController) Get(c *gin.Context) {
 }
 
 func (s *userController) GetAll(c *gin.Context) {
-	books, err := s.userService.GetAll()
+	users, err := s.userService.GetAll()
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusOK, books)
+	c.JSON(http.StatusOK, users)
 }
 
 func (s *userController) Update(c *gin.Context) {

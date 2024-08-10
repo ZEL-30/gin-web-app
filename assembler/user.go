@@ -14,13 +14,16 @@ func NewUserAssembler() UserAssembler {
 	return UserAssembler{}
 }
 
+// ToData 将 representation.User 转换为 entity.User
 func (s *UserAssembler) ToData(rep rep.User) *entity.User {
 	return &entity.User{
 		Name:     rep.Name,
 		Password: rep.Password,
+		Email:    rep.Email,
 	}
 }
 
+// ToRepresentation 将 entity.User 转换为 representation.User
 func (s *UserAssembler) ToRepresentation(data entity.User) *rep.User {
 	return &rep.User{
 		Base: rep.Base{
@@ -32,27 +35,28 @@ func (s *UserAssembler) ToRepresentation(data entity.User) *rep.User {
 				{
 					Rel:    "self",
 					Method: http.MethodGet,
-					Href:   fmt.Sprintf("/books/%s", data.ID),
+					Href:   fmt.Sprintf("/users/%d", data.ID),
 				},
 				{
-					Rel:    "add-book",
+					Rel:    "add-user",
 					Method: http.MethodPost,
-					Href:   "/books",
+					Href:   "/users",
 				},
 				{
-					Rel:    "edit-book",
+					Rel:    "edit-user",
 					Method: http.MethodPut,
-					Href:   fmt.Sprintf("/books/%s", data.ID),
+					Href:   fmt.Sprintf("/users/%d", data.ID),
 				},
 				{
-					Rel:    "delete-book",
+					Rel:    "delete-user",
 					Method: http.MethodDelete,
-					Href:   fmt.Sprintf("/books/%s", data.ID),
+					Href:   fmt.Sprintf("/users/%d", data.ID),
 				},
 			},
 		},
 
 		Name:     data.Name,
 		Password: data.Password,
+		Email:    data.Email,
 	}
 }
