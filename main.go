@@ -13,6 +13,7 @@ import (
 )
 
 func main() {
+	// 解析命令行参数, 获取配置文件类型
 	environment := flag.String("e", "default", "")
 
 	// 初始化配置
