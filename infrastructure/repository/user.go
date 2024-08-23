@@ -19,9 +19,7 @@ type userRepo struct {
 }
 
 func NewUserRepo(db *gorm.DB) domain.UserRepository {
-	return &userRepo{
-		db,
-	}
+	return &userRepo{db}
 }
 
 func (s *userRepo) encodeMD5(value string) string {
@@ -31,58 +29,58 @@ func (s *userRepo) encodeMD5(value string) string {
 }
 
 func (m *userRepo) Add(user entity.User) (*entity.User, error) {
-	logrus.Debugf("about to save a user %s", user.Name)
+	logrus.Debugf("About to save a user %s", user.Name)
 	user.Password = m.encodeMD5(user.Password)
 	if err := m.db.Create(&user).Error; err != nil {
 		return nil, err
 	}
-	logrus.Debugf("user %s saved", user.Name)
+	logrus.Debugf("User %s saved", user.Name)
 	return &user, nil
 }
 
 func (m *userRepo) Get(id string) (*entity.User, error) {
-	logrus.Debugf("about to get a user %s", id)
+	logrus.Debugf("About to get a user %s", id)
 	var data entity.User
 	err := m.db.Where("id = ?", id).First(&data).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &representation.AppError{
 				Code:    http.StatusFound,
-				Message: fmt.Sprintf("user %s is not found.", id),
+				Message: fmt.Sprintf("User %s is not found.", id),
 			}
 		}
 		return &entity.User{}, err
 	}
 
-	logrus.Debugf("user %s retrieved", id)
+	logrus.Debugf("User %s retrieved", id)
 	return &data, err
 }
 
-func (m *userRepo) GetAll() ([]*entity.User, error) {
-	logrus.Debug("about to get all user")
+func (m *userRepo) List() ([]*entity.User, error) {
+	logrus.Debug("About to get all user")
 	var users []*entity.User
 	err := m.db.Find(&users).Error
 	if err != nil {
 		return []*entity.User{}, err
 	}
-	logrus.Debug("all user retrieved")
+	logrus.Debug("All user retrieved")
 	return users, nil
 }
 
 func (m *userRepo) Update(user entity.User) (*entity.User, error) {
-	logrus.Debugf("about to update a user %s", user.Name)
+	logrus.Debugf("About to update a user %s", user.Name)
 	err := m.db.Select("name", "updated_at").Updates(&user).Error
-	logrus.Debugf("user %s updated", user.Name)
+	logrus.Debugf("User %s updated", user.Name)
 	return &user, err
 }
 
 func (m *userRepo) Delete(id string) error {
-	logrus.Debugf("about to delete a user %s", id)
+	logrus.Debugf("About to delete a user %s", id)
 	tx := m.db.Begin()
 	if err := tx.Where("id = ?", id).Delete(&entity.User{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	logrus.Debugf("user %s deleted", id)
+	logrus.Debugf("User %s deleted", id)
 	return tx.Commit().Error
 }

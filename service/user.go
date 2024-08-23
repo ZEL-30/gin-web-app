@@ -10,7 +10,7 @@ type userService struct {
 	userRepo domain.UserRepository
 }
 
-func NewUserService(userRepo domain.UserRepository) domain.UserInterface {
+func NewUserService(userRepo domain.UserRepository) domain.UserService {
 	return &userService{
 		userRepo,
 	}
@@ -32,8 +32,8 @@ func (s *userService) Get(id string) (*rep.User, error) {
 	return assembler.UserAsm.ToRepresentation(*data), nil
 }
 
-func (s *userService) GetAll() ([]*rep.User, error) {
-	users, err := s.userRepo.GetAll()
+func (s *userService) List() ([]*rep.User, error) {
+	users, err := s.userRepo.List()
 	if err != nil {
 		return nil, err
 	}

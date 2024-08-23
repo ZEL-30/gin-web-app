@@ -1,10 +1,10 @@
-package middleware
+package logger
 
 import (
 	"path"
 	"time"
 
-	infra "github.com/ZEL-30/gin-web-app/infrastructure"
+	infra "github.com/ZEL-30/gin-web-app/infrastructure/config"
 	"github.com/gin-gonic/gin"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
@@ -13,8 +13,8 @@ import (
 
 func LoggerToFile(logger *logrus.Logger) gin.HandlerFunc {
 	logWriter, _ := rotatelogs.New(
-		path.Join(infra.AppConfig.LogPath, infra.AppConfig.AppName+".%Y%m%d.log"),
-		rotatelogs.WithLinkName(path.Join(infra.AppConfig.LogPath, infra.AppConfig.AppName)),
+		path.Join(infra.App.LogPath, infra.App.AppName+".%Y%m%d.log"),
+		rotatelogs.WithLinkName(path.Join(infra.App.LogPath, infra.App.AppName)),
 		rotatelogs.WithMaxAge(7*24*time.Hour),
 		rotatelogs.WithRotationTime(24*time.Hour),
 	)

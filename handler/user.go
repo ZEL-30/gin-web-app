@@ -10,11 +10,11 @@ import (
 )
 
 type userHandler struct {
-	userService domain.UserInterface
+	userService domain.UserService
 	authService domain.AuthInterface
 }
 
-func NewUserHandler(userService domain.UserInterface, authService domain.AuthInterface) userHandler {
+func NewUserHandler(userService domain.UserService, authService domain.AuthInterface) userHandler {
 	return userHandler{
 		userService,
 		authService,
@@ -56,8 +56,8 @@ func (s *userHandler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func (s *userHandler) GetAll(c *gin.Context) {
-	users, err := s.userService.GetAll()
+func (s *userHandler) List(c *gin.Context) {
+	users, err := s.userService.List()
 	if err != nil {
 		_ = c.Error(err)
 		return

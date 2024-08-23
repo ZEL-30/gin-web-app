@@ -2,21 +2,23 @@ package domain
 
 import (
 	"github.com/ZEL-30/gin-web-app/entity"
-	rep "github.com/ZEL-30/gin-web-app/representation"
+	"github.com/ZEL-30/gin-web-app/representation"
 )
 
-type UserRepository interface {
-	Add(user entity.User) (*entity.User, error)
-	Get(id string) (*entity.User, error)
-	GetAll() ([]*entity.User, error)
-	Update(user entity.User) (*entity.User, error)
+// UserService 用户服务接口
+type UserService interface {
+	Add(user representation.User) (*representation.User, error)
+	Get(id string) (*representation.User, error)
+	List() ([]*representation.User, error)
+	Update(user representation.User) (*representation.User, error)
 	Delete(id string) error
 }
 
-type UserInterface interface {
-	Add(user rep.User) (*rep.User, error)
-	Get(id string) (*rep.User, error)
-	GetAll() ([]*rep.User, error)
-	Update(user rep.User) (*rep.User, error)
+// UserRepository 用户存储库接口
+type UserRepository interface {
+	Add(user entity.User) (*entity.User, error)
+	Get(id string) (*entity.User, error)
+	List() ([]*entity.User, error)
+	Update(user entity.User) (*entity.User, error)
 	Delete(id string) error
 }

@@ -5,7 +5,8 @@ import (
 	"log"
 
 	"github.com/ZEL-30/gin-web-app/entity"
-	infra "github.com/ZEL-30/gin-web-app/infrastructure"
+	"github.com/ZEL-30/gin-web-app/infrastructure/config"
+	"github.com/ZEL-30/gin-web-app/util"
 
 	"github.com/google/uuid"
 	logger "github.com/sirupsen/logrus"
@@ -19,21 +20,21 @@ func InitDB() *gorm.DB {
 	var (
 		dbName, user, password, host string
 		port                         int
-		dbType                       infra.DatabaseType
+		dbType                       config.DatabaseType
 		db                           *gorm.DB
 		err                          error
 	)
 
 	// 加载数据库配置
-	dbType = infra.DatabaseConfig.DBType
-	dbName = infra.DatabaseConfig.DBName
-	user = infra.DatabaseConfig.DBUser
-	password = infra.DatabaseConfig.DBPassword
-	host = infra.DatabaseConfig.DBHost
-	port = infra.DatabaseConfig.DBPort
+	dbType = config.Database.DBType
+	dbName = config.Database.DBName
+	user = config.Database.DBUser
+	password = config.Database.DBPassword
+	host = config.Database.DBHost
+	port = config.Database.DBPort
 
 	switch dbType {
-	case infra.MySQL:
+	case config.MySQL:
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, password, host, port, dbName)
 		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
@@ -41,7 +42,7 @@ func InitDB() *gorm.DB {
 			},
 		})
 
-	case infra.PostgreSQL:
+	case config.PostgreSQL:
 		db, err = gorm.Open(postgres.New(postgres.Config{
 			DSN:                  fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable", host, user, password, dbName, port),
 			PreferSimpleProtocol: true,
@@ -75,17 +76,34 @@ func InitDB() *gorm.DB {
 	sqlDB.SetConnMaxIdleTime(10)
 	// 设置最大的并发连接数为 100
 	sqlDB.SetMaxOpenConns(100)
+
 	// 调用 migrate 函数更新数据库结构
 	migrate(db)
 
 	return db
 }
 
+// migrate 函数用于更新数据库结构
 func migrate(db *gorm.DB) {
 	// 自动迁移数据库模式以匹配 User 结构体
-	err := db.AutoMigrate(&entity.User{})
+	err := db.AutoMigrate(
+		&entity.User{},
+	)
+
+	// 记录日志，如果迁移过程中出错则记录日志
 	if err != nil {
-		// 记录日志，如果迁移过程中出错则记录日志
 		logger.Fatal("migration failed.")
 	}
+}
+
+// InitData 初始化数据
+func InitData(db *gorm.DB) {
+	// 创建管理员
+	admin := &entity.User{
+		Name:     "zel",
+		Password: util.EncodeMD5("!Qw2!Qw2"),
+		Email:    "1362848545@qq.com",
+	}
+	// 插入管理员信息
+	db.Create(admin)
 }

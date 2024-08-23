@@ -1,17 +1,21 @@
-package infrastructure
+package config
 
 type app struct {
-	AppName  string
-	RunMode  string
-	HTTPPort int
-	LogPath  string
+	AppName    string
+	RunMode    string
+	HTTPPort   int
+	StaticPath string
+	LogPath    string
+	UploadPath string
 }
 
-var AppConfig = &app{
-	AppName:  "gin-web-app",
-	RunMode:  "debug",
-	HTTPPort: 8888,
-	LogPath:  "./log",
+var App = &app{
+	AppName:    "gin-web-app",
+	RunMode:    "debug",
+	HTTPPort:   8888,
+	StaticPath: "D:/temp",
+	LogPath:    "./log",
+	UploadPath: "images",
 }
 
 type database struct {
@@ -33,7 +37,7 @@ const (
 	MongoDB
 )
 
-var DatabaseConfig = &database{
+var Database = &database{
 	DBType:     MySQL,
 	DBUser:     "root",
 	DBPassword: "!Qw2!Qw2",
