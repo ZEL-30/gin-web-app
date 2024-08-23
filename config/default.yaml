@@ -1,0 +1,15 @@
+server:
+  app_name: gin-web-app
+  port: 8080
+  mode: debug
+  static_path: D:/temp
+  log_path: ./log
+
+database:
+  driver: mysql
+  host: localhost
+  port: 3306
+  name: example
+  username: root
+  password: 123456
+  init_data: false

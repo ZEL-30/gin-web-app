@@ -8,7 +8,7 @@ import (
 
 	"github.com/ZEL-30/gin-web-app/domain"
 	rep "github.com/ZEL-30/gin-web-app/representation"
-	"github.com/ZEL-30/gin-web-app/utils"
+	"github.com/ZEL-30/gin-web-app/util"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -27,7 +27,7 @@ func NewAuthService(db *gorm.DB) *authService {
 }
 
 func (s *authService) Register(user rep.User) error {
-	user.Password = utils.EncodeMD5(user.Password)
+	user.Password = util.EncodeMD5(user.Password)
 	if err := s.db.Create(&user).Error; err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func (s *authService) GenerateToken(username string, password string) (string, e
 
 	claims := domain.Claims{
 		Username: username,
-		Password: utils.EncodeMD5(password),
+		Password: util.EncodeMD5(password),
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    s.jwtSecret,
@@ -112,5 +112,5 @@ func (s *authService) ExtractToken(c *gin.Context) string {
 }
 
 func (s *authService) verifyPassword(password, hash string) bool {
-	return subtle.ConstantTimeCompare([]byte(utils.EncodeMD5(password)), []byte(hash)) == 1
+	return subtle.ConstantTimeCompare([]byte(util.EncodeMD5(password)), []byte(hash)) == 1
 }

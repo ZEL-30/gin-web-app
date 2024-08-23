@@ -1,9 +1,9 @@
 package router
 
 import (
+	"github.com/ZEL-30/gin-web-app/config"
 	"github.com/ZEL-30/gin-web-app/handler"
 	"github.com/ZEL-30/gin-web-app/infrastructure/auth"
-	"github.com/ZEL-30/gin-web-app/infrastructure/config"
 	"github.com/ZEL-30/gin-web-app/infrastructure/repository"
 	"github.com/ZEL-30/gin-web-app/middleware"
 	"github.com/ZEL-30/gin-web-app/service"
@@ -15,7 +15,7 @@ func NewRouter() *gin.Engine {
 	router := gin.Default()
 
 	// 配置静态文件服务
-	router.Static("/static", config.App.StaticPath)
+	router.Static("/static", config.GetString("server.static_path"))
 
 	return router
 }

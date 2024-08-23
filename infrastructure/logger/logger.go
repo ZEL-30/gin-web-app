@@ -4,7 +4,7 @@ import (
 	"path"
 	"time"
 
-	infra "github.com/ZEL-30/gin-web-app/infrastructure/config"
+	"github.com/ZEL-30/gin-web-app/config"
 	"github.com/gin-gonic/gin"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
@@ -13,8 +13,8 @@ import (
 
 func LoggerToFile(logger *logrus.Logger) gin.HandlerFunc {
 	logWriter, _ := rotatelogs.New(
-		path.Join(infra.App.LogPath, infra.App.AppName+".%Y%m%d.log"),
-		rotatelogs.WithLinkName(path.Join(infra.App.LogPath, infra.App.AppName)),
+		path.Join(config.GetString("server.log_path"), config.GetString("server.app_name")+".%Y%m%d.log"),
+		rotatelogs.WithLinkName(path.Join(config.GetString("server.log_path"), config.GetString("server.app_name")+".log")),
 		rotatelogs.WithMaxAge(7*24*time.Hour),
 		rotatelogs.WithRotationTime(24*time.Hour),
 	)

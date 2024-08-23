@@ -62,7 +62,7 @@ gin-web-app
 │   ├── config.go  // 配置文件
 │   ├── config_test.go  // 配置文件测试
 │   └── config.yaml  // 配置文件模板
-├── controllers
+├── handler
 │   ├── auth.go  // 认证控制器
 │   ├── user.go  // 用户控制器
 │   └── health.go  // 健康检查控制器

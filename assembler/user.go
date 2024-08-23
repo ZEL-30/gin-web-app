@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/ZEL-30/gin-web-app/entity"
-	rep "github.com/ZEL-30/gin-web-app/representation"
+	"github.com/ZEL-30/gin-web-app/representation"
 )
 
 type UserAssembler struct{}
@@ -15,7 +15,7 @@ func NewUserAssembler() UserAssembler {
 }
 
 // ToData 将 representation.User 转换为 entity.User
-func (s *UserAssembler) ToData(rep rep.User) *entity.User {
+func (s *UserAssembler) ToData(rep representation.User) *entity.User {
 	return &entity.User{
 		Name:     rep.Name,
 		Password: rep.Password,
@@ -24,14 +24,14 @@ func (s *UserAssembler) ToData(rep rep.User) *entity.User {
 }
 
 // ToRepresentation 将 entity.User 转换为 representation.User
-func (s *UserAssembler) ToRepresentation(data entity.User) *rep.User {
-	return &rep.User{
-		Base: rep.Base{
+func (s *UserAssembler) ToRepresentation(data entity.User) *representation.User {
+	return &representation.User{
+		Base: representation.Base{
 			ID:        data.ID,
 			CreatedAt: data.CreatedAt,
 			UpdatedAt: data.UpdatedAt,
 
-			Links: []rep.ResourceLink{
+			Links: []representation.ResourceLink{
 				{
 					Rel:    "self",
 					Method: http.MethodGet,

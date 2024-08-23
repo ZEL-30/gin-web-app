@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/ZEL-30/gin-web-app/infrastructure/config"
+	"github.com/ZEL-30/gin-web-app/config"
 	"github.com/ZEL-30/gin-web-app/infrastructure/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -20,5 +20,5 @@ func Init(router *gin.Engine) {
 	router.Use(CORS())
 
 	// 根据配置设置 gin 的运行模式
-	gin.SetMode(config.App.RunMode)
+	gin.SetMode(config.GetString("server.mode"))
 }
