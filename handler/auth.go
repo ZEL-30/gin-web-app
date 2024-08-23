@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"net/http"
@@ -8,17 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type authContorller struct {
+type authHandler struct {
 	authService domain.AuthInterface
 }
 
-func NewAuthContorller(authService domain.AuthInterface) authContorller {
-	return authContorller{
+func NewAuthHandler(authService domain.AuthInterface) authHandler {
+	return authHandler{
 		authService,
 	}
 }
 
-func (s *authContorller) GetAuth(c *gin.Context) {
+func (ah *authHandler) GetAuth(c *gin.Context) {
 	type authInfo struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
@@ -29,13 +29,13 @@ func (s *authContorller) GetAuth(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
 
-	err := s.authService.Auth(auth.Username, auth.Password)
+	err := ah.authService.Auth(auth.Username, auth.Password)
 	if err != nil {
 		_ = c.Error(err)
 		return
 	}
 
-	token, err := s.authService.GenerateToken(auth.Username, auth.Password)
+	token, err := ah.authService.GenerateToken(auth.Username, auth.Password)
 	if err != nil {
 		_ = c.AbortWithError(401, err)
 		return
@@ -49,13 +49,13 @@ func (s *authContorller) GetAuth(c *gin.Context) {
 }
 
 // might not useful
-func (s *authContorller) CheckAuth(c *gin.Context) {
-	token := s.authService.ExtractToken(c)
+func (ah *authHandler) CheckAuth(c *gin.Context) {
+	token := ah.authService.ExtractToken(c)
 	var rtnVal bool
 	if token == "" {
 		rtnVal = false
 	} else {
-		claims, err := s.authService.ParseToken(token)
+		claims, err := ah.authService.ParseToken(token)
 		if err != nil {
 			rtnVal = false
 		} else if time.Now().Unix() > claims.ExpiresAt {

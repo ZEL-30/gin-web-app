@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"net/http"
@@ -9,24 +9,24 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
-type userController struct {
+type userHandler struct {
 	userService domain.UserInterface
 	authService domain.AuthInterface
 }
 
-func NewUserController(userService domain.UserInterface, authService domain.AuthInterface) userController {
-	return userController{
+func NewUserHandler(userService domain.UserInterface, authService domain.AuthInterface) userHandler {
+	return userHandler{
 		userService,
 		authService,
 	}
 }
 
-func (s *userController) Add(c *gin.Context) {
+func (s *userHandler) Add(c *gin.Context) {
 	user := &rep.User{}
 	if err := c.ShouldBind(user); err != nil {
 		appErr := &rep.AppError{
 			Code:    http.StatusBadRequest,
-			Message: Message.InvalidMessage,
+			Message: Message.InvalidJson,
 		}
 		_ = c.Error(appErr)
 		return
@@ -45,7 +45,7 @@ func (s *userController) Add(c *gin.Context) {
 	c.JSON(http.StatusCreated, rtnVal)
 }
 
-func (s *userController) Get(c *gin.Context) {
+func (s *userHandler) Get(c *gin.Context) {
 	id := c.Param("id")
 	user, err := s.userService.Get(id)
 	if err != nil {
@@ -56,7 +56,7 @@ func (s *userController) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func (s *userController) GetAll(c *gin.Context) {
+func (s *userHandler) GetAll(c *gin.Context) {
 	users, err := s.userService.GetAll()
 	if err != nil {
 		_ = c.Error(err)
@@ -66,7 +66,7 @@ func (s *userController) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
-func (s *userController) Update(c *gin.Context) {
+func (s *userHandler) Update(c *gin.Context) {
 	id := c.Param("id")
 	_, err := s.userService.Get(id)
 	if err != nil {
@@ -78,7 +78,7 @@ func (s *userController) Update(c *gin.Context) {
 	if err := c.ShouldBind(user); err != nil {
 		_ = c.Error(&rep.AppError{
 			Code:    http.StatusBadRequest,
-			Message: Message.InvalidMessage,
+			Message: Message.InvalidJson,
 		})
 		return
 	}
@@ -93,7 +93,7 @@ func (s *userController) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func (s *userController) Delete(c *gin.Context) {
+func (s *userHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
 	logger.Debugf("Received request to delete a user %s.", id)
 	err := s.userService.Delete(id)

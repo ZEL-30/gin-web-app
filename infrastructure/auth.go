@@ -1,9 +1,7 @@
 package infrastructure
 
 import (
-	"crypto/md5"
 	"crypto/subtle"
-	"encoding/hex"
 	"net/http"
 	"strings"
 	"time"
@@ -112,12 +110,6 @@ func (s *authService) ExtractToken(c *gin.Context) string {
 	return ""
 }
 
-func (s *authService) encodeMD5(value string) string {
-	m := md5.New()
-	_, _ = m.Write([]byte(value))
-	return hex.EncodeToString(m.Sum(nil))
-}
-
 func (s *authService) verifyPassword(password, hash string) bool {
-	return subtle.ConstantTimeCompare([]byte(s.encodeMD5(password)), []byte(hash)) == 1
+	return subtle.ConstantTimeCompare([]byte(utils.encodeMD5(password)), []byte(hash)) == 1
 }
